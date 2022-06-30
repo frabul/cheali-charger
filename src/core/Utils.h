@@ -77,4 +77,24 @@ namespace Utils
     void delayMilliseconds(uint16_t value);
 }
 
+static inline int32_t ClipL( int32_t x, int32_t lowLimit, int32_t upLimit ) {
+    return ((x) > (upLimit)) ? (upLimit) : (((x) < (lowLimit)) ? (lowLimit) : (x));
+}
+
+static inline uint32_t ClipUL( uint32_t x, uint32_t lowLimit, uint32_t upLimit ) {
+    return ((x) > (upLimit)) ? (upLimit) : (((x) < (lowLimit)) ? (lowLimit) : (x));
+} 
+
+static inline int16_t ClipS( int16_t x, int16_t lowLimit, int16_t upLimit ) {
+    return ((x) > (upLimit)) ? (upLimit) : (((x) < (lowLimit)) ? (lowLimit) : (x));
+}
+
+static inline int16_t ClipInt32ToInt16( int32_t x ){ 
+    return ClipL((x), -INT16_MAX, INT16_MAX);
+}
+
+static inline int16_t ClipUInt32ToUInt16( uint32_t x ){ 
+    return ClipL((x), 0, UINT16_MAX);
+}
+
 #endif /* UTILS_H_ */
