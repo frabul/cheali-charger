@@ -28,7 +28,12 @@ namespace Screen { namespace Balancer {
     void displayResistance1_3();
     void displayResistance4_6();
     void displayResistance7_9();
-
+    void displayDebug0();
+    void displayDebug1();
+    void displayDebug2();
+    void displayDebug3();
+    void displayDebug4();
+    void displayDebug5();
 } };
 
 #endif /* SCREEN_BALANCER_H_ */

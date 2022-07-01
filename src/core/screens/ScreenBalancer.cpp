@@ -152,3 +152,26 @@ void Screen::Balancer::displayResistance7_9() {
     displayBalanceInfo(6, AnalogInputs::Resistance);
 }
 
+void Screen::Balancer::displayDebug0() {
+    TheveninMethod::displayDebugPage(0); 
+}
+
+void Screen::Balancer::displayDebug1() {
+    TheveninMethod::displayDebugPage(1); 
+}
+
+void Screen::Balancer::displayDebug2() {
+    TheveninMethod::displayDebugPage(2); 
+}
+
+void Screen::Balancer::displayDebug3() {
+    TheveninMethod::displayDebugPage(3); 
+}
+
+void Screen::Balancer::displayDebug4() {
+    TheveninMethod::displayDebugPage(4); 
+}
+
+void Screen::Balancer::displayDebug5() {
+    TheveninMethod::displayDebugPage(5); 
+}

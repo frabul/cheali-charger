@@ -26,22 +26,30 @@ class Resistance {
     // when discharging the resistance is negative (iV_ < 0)
     // in a Thevenin model this is mathematically equivalent
     // to a positive resistance and a current flowing in the opposite direction
-    int16_t i_initial;
+    public:
+    uint16_t i_initial;
     uint16_t v_initial;
-    int16_t i_last;
+    uint16_t i_last;
     uint16_t v_last;
-    uint32_t resistance_value;
+    int32_t resistance_value; 
     bool discharge;
 
-  public:
-    const static int bit_shift = 14;
-    Resistance();
-    Resistance( uint16_t initial_value, bool discharge ) : resistance_value( initial_value ), discharge( discharge ) {
+
+    static uint32_t points_added;
+    const static int bit_shift = 11;
+    Resistance() {
+      Reset();
+    }
+    Resistance( int32_t default_res, bool discharge ) : resistance_value( default_res ), discharge( discharge ) {
+      Reset();
     }
     AnalogInputs::ValueType getReadableRth();
-    void AddPoint( uint16_t i, int16_t v );
+    /// Resets the points used for resistance calculation ( keeps the value)
+    void Reset();
+    static AnalogInputs::ValueType getReadableRth( int32_t resistance );
+    void AddPoint( uint16_t i, uint16_t v );
     /// Gets the reistance value as a fixed point number with bit_shift bits of precision
-    uint32_t Get() const { return resistance_value; }
+    int32_t Get() const { return resistance_value; }
     static int32_t CalculateResistance( int32_t di, int32_t dv );
 };
 

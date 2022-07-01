@@ -68,7 +68,12 @@ BALANCER_PORTS_GT_6(
             {Screen::Methods::displayTemperature,   PAGE_ALWAYS, PAGE_NONE},
             {Screen::Methods::displayCIVlimits,     PAGE_ALWAYS, PAGE_PROGRAM(Program::Balance)},
             {Screen::Methods::displayVinput,        PAGE_ALWAYS, PAGE_NONE},
-
+            {Screen::Balancer::displayDebug0,        PAGE_ALWAYS, PAGE_NONE},
+            {Screen::Balancer::displayDebug1,        PAGE_ALWAYS, PAGE_NONE},
+            {Screen::Balancer::displayDebug2,        PAGE_ALWAYS, PAGE_NONE},
+            {Screen::Balancer::displayDebug3,        PAGE_ALWAYS, PAGE_NONE},
+            {Screen::Balancer::displayDebug4,        PAGE_ALWAYS, PAGE_NONE},
+            {Screen::Balancer::displayDebug5,        PAGE_ALWAYS, PAGE_NONE},
             {NULL, PAGE_ALWAYS, PAGE_NONE}
     };
 

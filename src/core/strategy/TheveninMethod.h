@@ -21,17 +21,20 @@
 #include "Hardware.h"
 #include "Thevenin.h"
 
+#define CURRENT_RAMP (ANALOG_AMP(1) / 10) //100ma
 namespace TheveninMethod {
 
     void initialize(bool charge);
     bool balance_isComplete(bool isEndVout, AnalogInputs::ValueType I);
 
     void calculateRthVth(AnalogInputs::ValueType I);
+    void measureRth(AnalogInputs::ValueType I);
     AnalogInputs::ValueType calculateNewI(bool isEndVout, AnalogInputs::ValueType I);
 
     AnalogInputs::ValueType getReadableRthCell(uint8_t cell);
     AnalogInputs::ValueType getReadableBattRth();
     AnalogInputs::ValueType getReadableWiresRth();
+    void displayDebugPage(int pindex);
 };
 
 

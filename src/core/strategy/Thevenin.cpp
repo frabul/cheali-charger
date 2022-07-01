@@ -23,39 +23,58 @@
 #include "Thevenin.h"
 #include "Utils.h"
 
+uint32_t Resistance::points_added = 0;
+
 int32_t Resistance::CalculateResistance( int32_t di, int32_t dv ) {
     return ( dv << Resistance::bit_shift ) / di;
 }
 
-void Resistance::AddPoint( uint16_t i, int16_t v ) {
-    if ( i == 0 || v == 0 )
+void Resistance::AddPoint( uint16_t i, uint16_t v ) {
+    if ( i < 0 || v == 0 )
         return;
-
+    Resistance::points_added++;
     if ( i_initial == 0 ) {
         // take first point
         i_initial = i;
         v_initial = v;
-        v_last    = v;
-        i_last    = i;
+
+        i_last = i;
+        v_last = v;
+
     } else {
-        // accept only points coming from a current sweep ( current increasing)
-        uint16_t min_increase = abs( i_last - i_initial ) >> 5;
+        // accept only points coming from a current sweep ( current increasing )
+        uint16_t min_increase = ( abs_mio( (int16_t)i_last - i_initial ) ) >> 5;
+        if ( min_increase == 0 )
+            min_increase = 25;
         if ( i > i_last + min_increase ) {
-            v_last = v;
-            i_last = i;
             // calculate value
-            int32_t dv = (int32_t)v_last - v_initial;
-            int32_t di = (int32_t)i_last - i_initial;
+            int32_t dv = (int32_t)v - v_initial;
+            int32_t di = (int32_t)i - i_initial;
             // update value if the dv change matches the one expected
             if ( ( discharge && dv < 0 ) || ( !discharge && dv > 0 ) ) {
+                v_last           = v;
+                i_last           = i;
                 resistance_value = CalculateResistance( di, dv );
             }
         }
     }
 }
 
+void Resistance::Reset() {
+    i_initial = 0;
+    v_initial = 0;
+    v_last    = 0;
+    i_last    = 0;
+}
+
 AnalogInputs::ValueType Resistance::getReadableRth() {
-    return ( resistance_value * ANALOG_VOLT( 1.0 ) ) >> bit_shift;
+    return Resistance::getReadableRth( resistance_value );
+}
+
+AnalogInputs::ValueType Resistance::getReadableRth( int32_t resistance ) {
+    int32_t res = ClipInt32ToInt16( resistance );
+    res         = abs_mio( res );
+    return ( abs_mio( res ) * ANALOG_VOLT( 1.0 ) ) >> bit_shift;
 }
 
 void Thevenin::init( AnalogInputs::ValueType Vth, AnalogInputs::ValueType Vmax, AnalogInputs::ValueType i, bool charge ) {
@@ -68,21 +87,21 @@ void Thevenin::init( AnalogInputs::ValueType Vth, AnalogInputs::ValueType Vmax, 
         Vfrom = max( Vth, Vmax );
         Vto   = min( Vth, Vmax );
     }
-    Vth_        = Vfrom;
-    int32_t res = Resistance::CalculateResistance( i, ( Vto - Vfrom ) );
-    Rth         = Resistance( res, !charge );
+    Vth_                = Vfrom;
+    int32_t default_res = ( 123l << Resistance::bit_shift ) / 1000; // 100mohm //Resistance::CalculateResistance( i, ( Vto - Vfrom ) );
+    if ( !charge )
+        default_res = -default_res;
+    Rth = Resistance( default_res, !charge );
 }
 
 AnalogInputs::ValueType Thevenin::calculateI( AnalogInputs::ValueType v ) const {
-
-    int32_t v = ( (int32_t)v - Vth_ ) << Resistance::bit_shift; // shift before division
-    int32_t i = v / Rth.Get();
-    i         = ClipL( i, 0, UINT16_MAX );
+    int32_t dv = ( (int32_t)v - Vth_ ) << Resistance::bit_shift; // shift before division
+    int32_t i  = dv / Rth.Get();
+    i          = ClipL( i, 0, UINT16_MAX );
     return i;
 }
 
 void Thevenin::calculateRthVth( AnalogInputs::ValueType v, AnalogInputs::ValueType i ) {
-    Rth.AddPoint( v, i );
     calculateVth( v, i );
 }
 

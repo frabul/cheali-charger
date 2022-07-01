@@ -1,0 +1,6 @@
+avrdude.exe -patmega32 -cstk500v1 -PCOM3 -b19200 -Uflash:w:cheali-charger-imaxB6-original_2.10-e10.3.12-20220630_atmega32.hex:a
+
+
+avrdude.exe -patmega32 -cstk500v1 -PCOM3 -b19200 -U hfuse:r:-:h -U lfuse:r:-:h -U efuse:r:-:h 
+avrdude.exe -patmega32 -cstk500v1 -PCOM3 -b19200 -U lfuse:w:0x3f:m -U hfuse:w:0xc9:m  
+avrdude.exe -patmega32 -cstk500v1 -PCOM3 -b19200 -U lfuse:w:0x3f:m -U hfuse:w:0xc1:m 

@@ -18,6 +18,8 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+ 
+#include <stdint.h>
 #include "AnalogInputsTypes.h"
 
 #define min(a,b) ((a)<(b)?(a):(b))
@@ -90,11 +92,11 @@ static inline int16_t ClipS( int16_t x, int16_t lowLimit, int16_t upLimit ) {
 }
 
 static inline int16_t ClipInt32ToInt16( int32_t x ){ 
-    return ClipL((x), -INT16_MAX, INT16_MAX);
+    return ClipL((x), -32767, 32767);
 }
 
 static inline int16_t ClipUInt32ToUInt16( uint32_t x ){ 
-    return ClipL((x), 0, UINT16_MAX);
+    return ClipL((x), 0, 0xffff);
 }
-
+#define abs_mio(x) ( ( (x) > 0 ) ? (x) : -(x) )
 #endif /* UTILS_H_ */
